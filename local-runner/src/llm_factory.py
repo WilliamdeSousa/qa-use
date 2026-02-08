@@ -46,3 +46,9 @@ def create_llm() -> BaseChatModel:
                 model=settings.google_model,
                 google_api_key=settings.google_api_key,  # type: ignore[arg-type]
             )
+
+        case _:
+            raise ValueError(
+                f"Unsupported LLM_PROVIDER: '{settings.llm_provider}'. "
+                "Must be one of: azure_openai, openai, anthropic, google"
+            )

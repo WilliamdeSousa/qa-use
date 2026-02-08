@@ -41,18 +41,18 @@ async def get_task(task_id: str) -> TaskResponse:
 # Returning 501 so callers know local mode doesn't support these.
 
 @app.put("/api/v1/stop-task")
-async def stop_task(task_id: str) -> dict[str, str]:
-    return {"detail": "stop-task not supported in local mode"}
+async def stop_task(task_id: str) -> None:
+    raise HTTPException(status_code=501, detail="stop-task not supported in local mode")
 
 
 @app.put("/api/v1/pause-task")
-async def pause_task(task_id: str) -> dict[str, str]:
-    return {"detail": "pause-task not supported in local mode"}
+async def pause_task(task_id: str) -> None:
+    raise HTTPException(status_code=501, detail="pause-task not supported in local mode")
 
 
 @app.put("/api/v1/resume-task")
-async def resume_task(task_id: str) -> dict[str, str]:
-    return {"detail": "resume-task not supported in local mode"}
+async def resume_task(task_id: str) -> None:
+    raise HTTPException(status_code=501, detail="resume-task not supported in local mode")
 
 
 @app.get("/api/v1/me")
