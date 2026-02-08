@@ -1,4 +1,4 @@
-"""Thread-safe in-memory store for task states with TTL-based eviction."""
+"""Thread-safe in-memory store for task states with count-based eviction."""
 
 import asyncio
 from collections import OrderedDict
@@ -22,16 +22,20 @@ class TaskStore:
         async with self._lock:
             self._tasks[task.id] = task
             if len(self._tasks) > MAX_TASKS:
-                # Evict oldest finished/failed tasks first
+                # Evict oldest finished/failed tasks first, then oldest overall
                 to_remove: list[str] = []
                 for tid, t in self._tasks.items():
                     if t.status in ("finished", "failed"):
                         to_remove.append(tid)
                     if len(to_remove) >= EVICT_BATCH:
                         break
-                # If not enough terminal tasks, evict oldest regardless
-                if not to_remove:
-                    to_remove = list(self._tasks.keys())[:EVICT_BATCH]
+                # Fill remaining quota from oldest tasks regardless of status
+                if len(to_remove) < EVICT_BATCH:
+                    for tid in self._tasks:
+                        if tid not in to_remove:
+                            to_remove.append(tid)
+                        if len(to_remove) >= EVICT_BATCH:
+                            break
                 for tid in to_remove:
                     del self._tasks[tid]
 
