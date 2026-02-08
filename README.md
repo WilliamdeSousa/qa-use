@@ -95,6 +95,53 @@ INNGEST_BASE_URL=http://inngest:8288
    - Provides detailed pass/fail reports
    - Captures screenshots and recordings
 
+## 🏠 Local Mode (No Cloud API)
+
+Run tests locally using the `browser-use` Python library instead of the BrowserUse Cloud API. This gives you full privacy (no page content leaves your machine) and lets you use your own LLM credits (Azure, OpenAI, Anthropic, or Google).
+
+### Setup
+
+1. **Configure `.env`** — uncomment and fill in the local mode section:
+
+   ```env
+   BROWSER_USE_MODE=local
+   BROWSER_USE_LOCAL_URL=http://local-runner:8000
+
+   # Pick one LLM provider:
+   LLM_PROVIDER=azure_openai
+   AZURE_OPENAI_API_KEY=your-key
+   AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+   AZURE_OPENAI_DEPLOYMENT=o4-mini
+   ```
+
+2. **Start with the `local` profile:**
+
+   ```bash
+   docker compose --profile local up
+   ```
+
+   This starts the normal stack **plus** the `local-runner` service on port 8000.
+
+3. **Verify:** `curl http://localhost:8000/api/v1/ping` should return `{"status":"ok","mode":"local"}`
+
+### Supported LLM Providers
+
+| Provider | `LLM_PROVIDER` | Required Env Vars |
+|----------|----------------|-------------------|
+| Azure OpenAI | `azure_openai` | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT` |
+| OpenAI | `openai` | `OPENAI_API_KEY` |
+| Anthropic | `anthropic` | `ANTHROPIC_API_KEY` |
+| Google | `google` | `GOOGLE_API_KEY` |
+
+### Limitations
+
+- No live VNC preview (`live_url` is always null)
+- No public share URLs (`public_share_url` is always null)
+- Tasks run as unbounded async — resource-heavy for parallel suites
+- No screenshot/recording capture yet
+
+To switch back to cloud mode, remove `BROWSER_USE_MODE=local` from `.env` and restart without the `local` profile: `docker compose up`
+
 ## 🤝 Contributing
 
 We welcome contributions! This project showcases the full capabilities of BrowserUse and serves as a reference implementation for AI-powered testing platforms.

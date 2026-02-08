@@ -101,6 +101,17 @@ services:
     networks:
       - qause-network
 
+  local-runner:
+    build: ./local-runner
+    env_file:
+      - .env
+    ports:
+      - '8000:8000'
+    profiles:
+      - local
+    networks:
+      - qause-network
+
 networks:
   qause-network:
     driver: bridge
