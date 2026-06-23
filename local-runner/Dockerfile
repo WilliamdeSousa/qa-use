@@ -15,7 +15,11 @@ COPY pyproject.toml .
 RUN uv sync --no-dev --no-install-project
 
 # Install Playwright browsers (Chromium only)
-RUN uv run playwright install --with-deps chromium
+RUN uv run python -m playwright install --with-deps chromium
+
+# Workaround: browser-use checks llm.provider/model_name without getattr, breaking standard LangChain providers
+COPY patch_browser_use.py .
+RUN uv run python3 patch_browser_use.py
 
 # Copy application code
 COPY src/ src/

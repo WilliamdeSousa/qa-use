@@ -4,7 +4,7 @@ import json
 import logging
 from datetime import datetime, timezone
 
-from browser_use import Agent, Browser, BrowserConfig
+from browser_use import Agent, Browser
 
 from src.config import settings
 from src.llm_factory import create_llm
@@ -18,9 +18,7 @@ async def execute_task(task_state: TaskState) -> None:
     """Run a browser-use agent for the given task. Updates store in-place."""
     await store.update(task_state.id, status="running")
 
-    browser = Browser(
-        config=BrowserConfig(headless=settings.browser_headless),
-    )
+    browser = Browser(headless=settings.browser_headless)
 
     try:
         llm = create_llm()
