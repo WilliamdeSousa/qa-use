@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Configuration loaded from environment variables."""
 
-    llm_provider: Literal["azure_openai", "openai", "anthropic", "google"] = "azure_openai"
+    llm_provider: Literal["azure_openai", "openai", "anthropic", "google"] = "openai"
 
     # Azure OpenAI
     azure_openai_api_key: str = ""
@@ -16,7 +16,8 @@ class Settings(BaseSettings):
 
     # OpenAI
     openai_api_key: str = ""
-    openai_model: str = "o4-mini"
+    openai_model: str = "glm:4.6v-flash"
+    openai_base_url: str = ""
 
     # Anthropic
     anthropic_api_key: str = ""

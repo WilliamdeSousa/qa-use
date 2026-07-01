@@ -18,15 +18,19 @@ async def execute_task(task_state: TaskState) -> None:
     """Run a browser-use agent for the given task. Updates store in-place."""
     await store.update(task_state.id, status="running")
 
-    browser = Browser(headless=settings.browser_headless)
+    browser = Browser(headless=settings.browser_headless, viewport={"width": 1280, "height": 800})
 
     try:
+        print("TESTANDO SEM VISION")
         llm = create_llm()
         agent = Agent(
             task=task_state.task_prompt,
             llm=llm,
             browser=browser,
             max_actions_per_step=5,
+            llm_timeout=300,
+            llm_screenshot_size=(1280, 800),
+            use_vision=False,
         )
 
         result = await agent.run(max_steps=settings.max_agent_steps)

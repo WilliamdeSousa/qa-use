@@ -6,6 +6,7 @@ from src.config import settings
 
 
 def create_llm() -> BaseChatModel:
+    print("LLM PROVIDER:", settings.llm_provider)
     """Create a browser-use native LLM instance based on the configured provider."""
     match settings.llm_provider:
         case "azure_openai":
@@ -24,6 +25,8 @@ def create_llm() -> BaseChatModel:
             return ChatOpenAI(
                 model=settings.openai_model,
                 api_key=settings.openai_api_key,
+                base_url=settings.openai_base_url,
+                timeout=300,
             )
 
         case "anthropic":

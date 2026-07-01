@@ -16,8 +16,6 @@ services:
         condition: service_healthy
       migrate:
         condition: service_completed_successfully
-    networks:
-      - qause-network
 
   inngest:
     image: inngest/inngest:latest
@@ -27,8 +25,6 @@ services:
       - '8288:8288'
     depends_on:
       - app
-    networks:
-      - qause-network
 
   postgres:
     restart: always
@@ -47,8 +43,6 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     command: postgres -c max_connections=1000
-    networks:
-      - qause-network
 
   migrate:
     build:
@@ -61,8 +55,6 @@ services:
       postgres:
         condition: service_healthy
     restart: on-failure
-    networks:
-      - qause-network
 
   local-runner:
     build: ./local-runner
@@ -72,9 +64,3 @@ services:
       - '8000:8000'
     profiles:
       - local
-    networks:
-      - qause-network
-
-networks:
-  qause-network:
-    driver: bridge
