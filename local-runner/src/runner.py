@@ -29,8 +29,8 @@ async def execute_task(task_state: TaskState) -> None:
             browser=browser,
             max_actions_per_step=5,
             llm_timeout=300,
+            step_timeout=300,
             llm_screenshot_size=(1280, 800),
-            use_vision=False,
         )
 
         result = await agent.run(max_steps=settings.max_agent_steps)

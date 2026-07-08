@@ -32,7 +32,6 @@ async def run_task(body: RunTaskRequestBody) -> TaskCreatedResponse:
 @app.get("/api/v1/task/{task_id}", response_model=TaskResponse)
 async def get_task(task_id: str) -> TaskResponse:
     task_state = await store.get(task_id)
-    print(task_state)
     if task_state is None:
         raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
     return task_state.to_response()
